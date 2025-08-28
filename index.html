@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SendIt - Share Files Instantly</title>
+    <title>SendIt - Send Money Instantly</title>
     <style>
         * {
             margin: 0;
@@ -84,48 +84,79 @@
             opacity: 0.9;
         }
 
-        .upload-area {
+        .money-transfer-area {
             background: rgba(255, 255, 255, 0.1);
-            border: 2px dashed rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
+            border-radius: 15px;
             padding: 3rem;
             margin: 2rem auto;
-            max-width: 600px;
+            max-width: 500px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .transfer-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            color: white;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+        }
+
+        .amount-input {
+            font-size: 2rem !important;
             text-align: center;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-
-        .upload-area:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-
-        .upload-area.dragover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: white;
-        }
-
-        .upload-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-weight: bold;
         }
 
         .btn {
             background: linear-gradient(45deg, #ff6b6b, #ee5a24);
             color: white;
-            padding: 12px 30px;
+            padding: 15px 30px;
             border: none;
             border-radius: 25px;
-            font-size: 1rem;
+            font-size: 1.1rem;
             cursor: pointer;
             transition: transform 0.3s;
             text-decoration: none;
             display: inline-block;
+            font-weight: bold;
         }
 
         .btn:hover {
             transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #00d2ff, #3a7bd5);
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .quick-actions .btn {
+            flex: 1;
+            padding: 10px;
+            font-size: 0.9rem;
         }
 
         .features {
@@ -154,57 +185,58 @@
             margin-bottom: 1rem;
         }
 
-        .progress-container {
-            display: none;
-            margin: 2rem auto;
-            max-width: 600px;
-        }
-
-        .progress-bar {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            overflow: hidden;
-            height: 20px;
-        }
-
-        .progress-fill {
-            background: linear-gradient(45deg, #00d2ff, #3a7bd5);
-            height: 100%;
-            width: 0%;
-            transition: width 0.3s;
-        }
-
-        .share-link {
-            display: none;
-            margin: 2rem auto;
-            max-width: 600px;
-            text-align: center;
-        }
-
-        .link-container {
+        .recent-transactions {
             background: rgba(255, 255, 255, 0.1);
-            padding: 1rem;
-            border-radius: 10px;
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .link-input {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.9);
-        }
-
-        .copy-btn {
-            background: #27ae60;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 600px;
             color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .transaction-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .transaction-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .transaction-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .transaction-amount {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .positive {
+            color: #2ecc71;
+        }
+
+        .negative {
+            color: #e74c3c;
         }
 
         footer {
@@ -224,8 +256,13 @@
                 display: none;
             }
             
-            .upload-area {
+            .money-transfer-area {
                 padding: 2rem;
+                margin: 1rem;
+            }
+
+            .quick-actions {
+                flex-direction: column;
             }
         }
     </style>
@@ -233,11 +270,11 @@
 <body>
     <header>
         <nav class="container">
-            <div class="logo">SendIt</div>
+            <div class="logo">💸 SendIt</div>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#about">About</a></li>
+                <li><a href="#send">Send Money</a></li>
+                <li><a href="#activity">Activity</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </nav>
@@ -246,30 +283,72 @@
     <main>
         <section id="home" class="hero">
             <div class="container">
-                <h1>Share Files Instantly</h1>
-                <p>Fast, secure, and simple file sharing for everyone</p>
+                <h1>Send Money Instantly</h1>
+                <p>Fast, secure, and simple peer-to-peer payments</p>
                 
-                <div class="upload-area" id="uploadArea">
-                    <div class="upload-icon">📁</div>
-                    <h3>Drop files here or click to browse</h3>
-                    <p>Support for all file types up to 100MB</p>
-                    <input type="file" id="fileInput" style="display: none;" multiple>
+                <div class="money-transfer-area" id="transferArea">
+                    <form class="transfer-form" id="transferForm">
+                        <div class="form-group">
+                            <label for="amount">Amount</label>
+                            <input type="number" id="amount" class="amount-input" placeholder="$0.00" step="0.01" min="0.01" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="recipient">Send to</label>
+                            <input type="text" id="recipient" placeholder="Phone, email, or @username" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="note">What's it for?</label>
+                            <input type="text" id="note" placeholder="Add a note (optional)">
+                        </div>
+                        
+                        <button type="submit" class="btn">Send Money</button>
+                        
+                        <div class="quick-actions">
+                            <button type="button" class="btn btn-secondary" onclick="requestMoney()">Request Money</button>
+                            <button type="button" class="btn btn-secondary" onclick="splitBill()">Split Bill</button>
+                        </div>
+                    </form>
                 </div>
+            </div>
+        </section>
 
-                <div class="progress-container" id="progressContainer">
-                    <h3 style="color: white; margin-bottom: 1rem;">Uploading...</h3>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill"></div>
+        <section id="activity" class="recent-transactions">
+            <div class="container">
+                <h3 style="margin-bottom: 1.5rem; text-align: center;">Recent Activity</h3>
+                
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-avatar">J</div>
+                        <div>
+                            <div>John Smith</div>
+                            <small style="opacity: 0.8;">Coffee ☕</small>
+                        </div>
                     </div>
-                    <p id="progressText" style="color: white; margin-top: 1rem;">0%</p>
+                    <div class="transaction-amount negative">-$12.50</div>
                 </div>
-
-                <div class="share-link" id="shareLink">
-                    <h3 style="color: white; margin-bottom: 1rem;">Your file is ready!</h3>
-                    <div class="link-container">
-                        <input type="text" class="link-input" id="linkInput" readonly>
-                        <button class="copy-btn" onclick="copyLink()">Copy</button>
+                
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-avatar">S</div>
+                        <div>
+                            <div>Sarah Johnson</div>
+                            <small style="opacity: 0.8;">Dinner split 🍕</small>
+                        </div>
                     </div>
+                    <div class="transaction-amount positive">+$25.00</div>
+                </div>
+                
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-avatar">M</div>
+                        <div>
+                            <div>Mike Wilson</div>
+                            <small style="opacity: 0.8;">Movie tickets 🎬</small>
+                        </div>
+                    </div>
+                    <div class="transaction-amount negative">-$18.00</div>
                 </div>
             </div>
         </section>
@@ -280,18 +359,18 @@
                 <div class="features-grid">
                     <div class="feature-card">
                         <div class="feature-icon">⚡</div>
-                        <h3>Lightning Fast</h3>
-                        <p>Upload and share files in seconds with our optimized infrastructure</p>
+                        <h3>Instant Transfers</h3>
+                        <p>Send money to friends and family in seconds, not days</p>
                     </div>
                     <div class="feature-card">
                         <div class="feature-icon">🔒</div>
-                        <h3>Secure & Private</h3>
-                        <p>End-to-end encryption ensures your files stay private and secure</p>
+                        <h3>Bank-Level Security</h3>
+                        <p>Your money and data are protected with industry-leading encryption</p>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">🌐</div>
-                        <h3>Universal Access</h3>
-                        <p>Share with anyone, anywhere, on any device with just a link</p>
+                        <div class="feature-icon">💳</div>
+                        <h3>No Hidden Fees</h3>
+                        <p>Send money for free when you use your bank account or debit card</p>
                     </div>
                 </div>
             </div>
@@ -302,9 +381,9 @@
                 <h2 style="text-align: center; margin-bottom: 2rem;">About SendIt</h2>
                 <div style="max-width: 800px; margin: 0 auto; text-align: center;">
                     <p style="font-size: 1.1rem; line-height: 1.8;">
-                        SendIt is a modern file sharing platform designed for simplicity and speed. 
-                        Whether you're sharing documents with colleagues, photos with friends, or 
-                        large files with clients, SendIt makes it effortless and secure.
+                        SendIt is a modern peer-to-peer payment platform that makes sending and receiving 
+                        money as easy as sending a text message. Split bills, pay friends back, or send 
+                        money to family - all with just a few taps.
                     </p>
                 </div>
             </div>
@@ -314,9 +393,10 @@
             <div class="container">
                 <h2 style="text-align: center; color: white; margin-bottom: 2rem;">Get In Touch</h2>
                 <div style="max-width: 600px; margin: 0 auto; text-align: center; color: white;">
-                    <p style="margin-bottom: 1rem;">Have questions or feedback? We'd love to hear from you!</p>
-                    <p>Email: hello@thesenditapp.com</p>
-                    <p>Follow us on social media for updates and tips</p>
+                    <p style="margin-bottom: 1rem;">Questions about payments or need help? We're here for you!</p>
+                    <p>Email: support@thesenditapp.com</p>
+                    <p>Phone: 1-800-SEND-IT</p>
+                    <p>Follow us for updates and money tips</p>
                 </div>
             </div>
         </section>
@@ -324,94 +404,90 @@
 
     <footer>
         <div class="container">
-            <p>&copy; 2025 SendIt. All rights reserved. | Privacy Policy | Terms of Service</p>
+            <p>&copy; 2025 SendIt. All rights reserved. | Privacy Policy | Terms of Service | Security</p>
         </div>
     </footer>
 
     <script>
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const progressContainer = document.getElementById('progressContainer');
-        const progressFill = document.getElementById('progressFill');
-        const progressText = document.getElementById('progressText');
-        const shareLink = document.getElementById('shareLink');
-        const linkInput = document.getElementById('linkInput');
+        const transferForm = document.getElementById('transferForm');
+        const amountInput = document.getElementById('amount');
+        const recipientInput = document.getElementById('recipient');
+        const noteInput = document.getElementById('note');
 
-        // Click to browse files
-        uploadArea.addEventListener('click', () => {
-            fileInput.click();
+        // Format amount input as currency
+        amountInput.addEventListener('input', function(e) {
+            let value = e.target.value;
+            if (value) {
+                // Add dollar sign if not present
+                if (!value.startsWith('$')) {
+                    e.target.value = '$' + value;
+                }
+            }
         });
 
-        // Drag and drop functionality
-        uploadArea.addEventListener('dragover', (e) => {
+        // Handle form submission
+        transferForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            uploadArea.classList.add('dragover');
+            
+            const amount = amountInput.value;
+            const recipient = recipientInput.value;
+            const note = noteInput.value;
+            
+            if (amount && recipient) {
+                simulateTransfer(amount, recipient, note);
+            }
         });
 
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
-        });
+        function simulateTransfer(amount, recipient, note) {
+            // Show loading state
+            const submitBtn = transferForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Sending...';
+            submitBtn.disabled = true;
+            
+            // Simulate transfer delay
+            setTimeout(() => {
+                alert(`Successfully sent ${amount} to ${recipient}!${note ? '\nNote: ' + note : ''}`);
+                
+                // Reset form
+                transferForm.reset();
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                
+                // Add to recent transactions (simulation)
+                addRecentTransaction(recipient, amount, note);
+            }, 2000);
+        }
 
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            const files = e.dataTransfer.files;
-            handleFiles(files);
-        });
-
-        // File input change
-        fileInput.addEventListener('change', (e) => {
-            handleFiles(e.target.files);
-        });
-
-        function handleFiles(files) {
-            if (files.length > 0) {
-                simulateUpload(files[0]);
+        function requestMoney() {
+            const recipient = recipientInput.value;
+            const amount = amountInput.value;
+            
+            if (recipient && amount) {
+                alert(`Money request sent to ${recipient} for ${amount}`);
+            } else {
+                alert('Please enter an amount and recipient to request money');
             }
         }
 
-        function simulateUpload(file) {
-            uploadArea.style.display = 'none';
-            progressContainer.style.display = 'block';
+        function splitBill() {
+            const amount = amountInput.value;
             
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += Math.random() * 15;
-                if (progress >= 100) {
-                    progress = 100;
-                    clearInterval(interval);
-                    showShareLink(file.name);
+            if (amount) {
+                const numPeople = prompt('How many people to split with?', '2');
+                if (numPeople && numPeople > 1) {
+                    const splitAmount = (parseFloat(amount.replace('$', '')) / numPeople).toFixed(2);
+                    alert(`Split ${amount} ${numPeople} ways = $${splitAmount} per person`);
                 }
-                
-                progressFill.style.width = progress + '%';
-                progressText.textContent = Math.round(progress) + '%';
-            }, 200);
+            } else {
+                alert('Please enter an amount to split');
+            }
         }
 
-        function showShareLink(fileName) {
-            setTimeout(() => {
-                progressContainer.style.display = 'none';
-                shareLink.style.display = 'block';
-                
-                // Generate a mock share link
-                const shareUrl = `https://thesenditapp.com/file/${Math.random().toString(36).substr(2, 9)}`;
-                linkInput.value = shareUrl;
-            }, 500);
-        }
-
-        function copyLink() {
-            linkInput.select();
-            document.execCommand('copy');
-            
-            const copyBtn = document.querySelector('.copy-btn');
-            const originalText = copyBtn.textContent;
-            copyBtn.textContent = 'Copied!';
-            copyBtn.style.background = '#27ae60';
-            
-            setTimeout(() => {
-                copyBtn.textContent = originalText;
-                copyBtn.style.background = '#27ae60';
-            }, 2000);
+        function addRecentTransaction(recipient, amount, note) {
+            // This would normally update the database
+            // For demo purposes, we'll just log it
+            console.log('New transaction:', { recipient, amount, note, timestamp: new Date() });
         }
 
         // Smooth scrolling for navigation links
@@ -429,4 +505,4 @@
         });
     </script>
 </body>
-</html>                
+</html>
